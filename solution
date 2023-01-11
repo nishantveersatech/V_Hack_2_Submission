@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+const int c=10001;
+int countProducts(int currentProduct,int m,int capacity[],int isConnect[][c],int total,int n)
+{
+    if(currentProduct > n) {
+        return total;
+    }
+    int maxProducts = 0;
+    for(int i=1; i<m; i++) {
+        if(isConnect[currentProduct][i] && capacity[i]>0) {
+            capacity[i]--;
+            int ans1=countProducts(currentProduct+1,m, capacity,isConnect, total+1, n);
+            if(ans1>maxProducts) maxProducts = ans1;
+            capacity[i]++;
+        }
+    }
+    int ans2 = countProducts(currentProduct+1,m,capacity,isConnect, total, n );
+    return std::max(maxProducts, ans2);
+}
+void getMAxProductsPerYear(int capacity[],int m,int isConnect[][c], int n, int years, vector<pair<int,int>> reduction)
+{
+    int year=0;
+    for(int i=0; i<years; i++) {
+        int products = countProducts(1, m,capacity, isConnect, 0, n);
+        cout<<products<<endl;
+        capacity[reduction[i].first]-=reduction[i].second;
+    }
+}
+
+int main()
+{
+    int n;
+    cin>>n;
+    int m;
+    cin>>m;
+    int k;
+    cin>> k;
+    int isConnect[n+1][c];
+    for(int i=0; i<k; i++) {
+        int c,d;
+        cin>>c>>d;
+        isConnect[c][d]= 1;
+    }
+    for(int i=0; i<n+1; i++) {
+        for(int j=0; j<m+1; j++) {
+            if(isConnect[i][j]!=1) isConnect[i][j]=0;
+        }
+    }
+     
+    int capacity[m+1];
+    for(int i=0; i<m; i++) {
+        cin>>capacity[i+1];
+    }
+    int years;
+    cin>>years;
+    vector<pair<int,int>> reduction;
+    for(int i=0; i<years; i++) {
+        int assembly,deduction;
+        cin>>assembly>>deduction;
+        reduction.push_back(make_pair(assembly,deduction));
+    }
+    getMAxProductsPerYear(capacity,m+1,isConnect,n, years,reduction);
+
+    return 0;
+}
