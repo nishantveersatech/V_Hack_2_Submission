@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-const int c=10001;
+const int c=2001;
 int countProducts(int currentProduct,int m,int capacity[],int isConnect[][c],int total,int n)
 {
     if(currentProduct > n) {
